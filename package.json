@@ -1,0 +1,53 @@
+{
+  "name": "@cloakwp/nextjs",
+  "version": "0.0.1",
+  "description": "CloakWP utilities + components for Next.js",
+  "main": "dist/index",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsc -p tsconfig.json -w",
+    "build": "npm run build-ts",
+    "build-ts": "tsc-silent -p tsconfig.json --suppress",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "zzz-postpublish": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloak-labs/cloakwp-nextjs.git"
+  },
+  "keywords": [
+    "wordpress",
+    "wp",
+    "cloakwp",
+    "cloak",
+    "next",
+    "nextjs",
+    "headless",
+    "decoupled"
+  ],
+  "author": "Kaelan Smith",
+  "license": "LGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/cloak-labs/cloakwp-nextjs/issues"
+  },
+  "homepage": "https://github.com/cloak-labs/cloakwp-nextjs#readme",
+  "devDependencies": {
+    "@types/node": "^18.18.1",
+    "@types/react": "18.2.37",
+    "@types/react-dom": "^18.2.8",
+    "tsc-watch": "^5.0.3",
+    "typescript": "^5.3.2"
+  },
+  "peerDependencies": {
+    "html-react-parser": "3.x",
+    "cloakwp": ">= 0.3.8",
+    "@cloakwp/react": ">= 0.0.1",
+    "next": ">= 12.3"
+  }
+}
