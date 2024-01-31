@@ -45,9 +45,12 @@
     "typescript": "^5.3.2"
   },
   "peerDependencies": {
-    "html-react-parser": "3.x",
-    "cloakwp": ">= 0.3.8",
-    "@cloakwp/react": ">= 0.0.1",
+    "html-react-parser": "5.x",
+    "cloakwp": ">= 0.4.1",
+    "@cloakwp/react": ">= 0.0.2",
     "next": ">= 12.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
