@@ -46,8 +46,8 @@
   },
   "peerDependencies": {
     "html-react-parser": "5.x",
-    "cloakwp": ">= 0.4.1",
-    "@cloakwp/react": ">= 0.0.2",
+    "cloakwp": ">= 0.4.3",
+    "@cloakwp/react": ">= 0.0.6",
     "next": ">= 12.3"
   },
   "publishConfig": {
