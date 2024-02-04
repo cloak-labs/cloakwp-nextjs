@@ -1,6 +1,6 @@
 {
   "name": "@cloakwp/nextjs",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "CloakWP utilities + components for Next.js",
   "main": "dist/index",
   "types": "dist/index.d.ts",
