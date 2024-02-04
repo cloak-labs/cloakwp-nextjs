@@ -1,11 +1,12 @@
-import { getCMSInstance } from "cloakwp";
+import { getCMSInstanceAsync } from "cloakwp";
 
 export async function verifyUserAuthStatus(req, res) {
-  const wp = getCMSInstance().client();
+  const wp = await getCMSInstanceAsync();
+  const wpClient = wp.client();
   const wpCookie = req.headers.cookie || ""; // Get the WordPress cookies from the client-side request
 
-  wp.setHeaders("Cookie", wpCookie); // include cookies in `isLoggedIn` request we make below
-  const isLoggedIn = await wp.isLoggedIn();
+  wpClient.setHeaders("Cookie", wpCookie); // include cookies in `isLoggedIn` request we make below
+  const isLoggedIn = await wpClient.isLoggedIn();
 
   res.json(isLoggedIn);
 }

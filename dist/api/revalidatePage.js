@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.revalidatePage = void 0;
-// TODO: need to re-export this utility function from 'cloakcms' out of "cloakwp"
 const cloakwp_1 = require("cloakwp");
 async function revalidatePage(req, res) {
     let { pathname } = req.query;

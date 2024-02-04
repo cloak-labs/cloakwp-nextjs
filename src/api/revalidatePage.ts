@@ -1,4 +1,3 @@
-// TODO: need to re-export this utility function from 'cloakcms' out of "cloakwp"
 import { stripTrailingSlash } from "cloakwp";
 
 export async function revalidatePage(req, res) {
