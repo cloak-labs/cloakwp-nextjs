@@ -1,4 +1,4 @@
-import { stripTrailingSlash } from "cloakwp";
+import { stripTrailingSlash } from "cloakwp/cms";
 
 export async function revalidatePage(req, res) {
   let { pathname } = req.query;

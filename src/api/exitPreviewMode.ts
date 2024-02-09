@@ -1,5 +1,4 @@
-// TODO: need to re-export this utility function from 'cloakcms' out of "cloakwp"
-import { stripTrailingSlash } from "cloakwp";
+import { stripTrailingSlash } from "cloakwp/cms";
 
 export async function exitPreviewMode(req, res) {
   let { pathname } = req.query;

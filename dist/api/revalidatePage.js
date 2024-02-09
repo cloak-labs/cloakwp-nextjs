@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.revalidatePage = void 0;
-const cloakwp_1 = require("cloakwp");
-async function revalidatePage(req, res) {
+import { stripTrailingSlash } from "cloakwp/cms";
+export async function revalidatePage(req, res) {
     let { pathname } = req.query;
-    pathname = (0, cloakwp_1.stripTrailingSlash)(pathname);
+    pathname = stripTrailingSlash(pathname);
     try {
         await res.revalidate(pathname).catch((err) => {
             throw `Page Revalidation ${err}`;
@@ -15,4 +12,3 @@ async function revalidatePage(req, res) {
         return res.status(500).send({ error: error, path: pathname });
     }
 }
-exports.revalidatePage = revalidatePage;

@@ -1,9 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.exitPreviewMode = void 0;
-// TODO: need to re-export this utility function from 'cloakcms' out of "cloakwp"
-const cloakwp_1 = require("cloakwp");
-async function exitPreviewMode(req, res) {
+import { stripTrailingSlash } from "cloakwp/cms";
+export async function exitPreviewMode(req, res) {
     let { pathname } = req.query;
     /* Exit the current user from "Preview Mode".
        Note: we pass in an options object with path == the path of the page we were previewing.
@@ -16,10 +12,9 @@ async function exitPreviewMode(req, res) {
   
             * Therefore, using cloakwp's preview feature requires using Next v12.3.0 or greater
     */
-    pathname = (0, cloakwp_1.stripTrailingSlash)(pathname); // important to remove trailing slash so preview cookies kick in on correct page
+    pathname = stripTrailingSlash(pathname); // important to remove trailing slash so preview cookies kick in on correct page
     res.clearPreviewData({ path: pathname });
     // Redirect the user back to the same page they were just previewing -- they'll now see the published version.
     res.writeHead(307, { Location: pathname });
     res.end();
 }
-exports.exitPreviewMode = exitPreviewMode;

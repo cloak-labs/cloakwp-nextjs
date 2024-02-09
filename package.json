@@ -2,18 +2,30 @@
   "name": "@cloakwp/nextjs",
   "version": "0.1.0",
   "description": "CloakWP utilities + components for Next.js",
-  "main": "dist/index",
+  "type": "module",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.js",
-      "import": "./dist/index.d.ts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./api": {
+      "require": "./dist/api/index.js",
+      "import": "./dist/api/index.js",
+      "types": "./dist/api/*.d.ts"
+    },
+    "./hooks": {
+      "require": "./dist/hooks/index.js",
+      "import": "./dist/hooks/index.js",
+      "types": "./dist/hooks/*.d.ts"
     }
   },
   "scripts": {
     "dev": "tsc -p tsconfig.json -w",
     "build": "npm run build-ts",
-    "build-ts": "tsc-silent -p tsconfig.json --suppress",
+    "build-ts": "tsc -p tsconfig.json",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "zzz-postpublish": "git push && git push --tags"
   },
@@ -45,9 +57,9 @@
     "typescript": "^5.3.2"
   },
   "peerDependencies": {
+    "@cloakwp/react": ">= 0.2.0",
+    "cloakwp": ">= 0.6.1",
     "html-react-parser": "5.x",
-    "cloakwp": ">= 0.5.0",
-    "@cloakwp/react": ">= 0.1.0",
     "next": ">= 12.3"
   },
   "publishConfig": {

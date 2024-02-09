@@ -1,4 +1,4 @@
-import { getCMSInstanceAsync } from "cloakwp";
+import { getCMSInstanceAsync } from "cloakwp/cms";
 
 export async function verifyUserAuthStatus(req, res) {
   const wp = await getCMSInstanceAsync();

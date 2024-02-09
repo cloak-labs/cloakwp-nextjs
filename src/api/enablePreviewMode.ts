@@ -1,4 +1,4 @@
-import { getPreviewParams } from "cloakwp";
+import { getPreviewParams } from "cloakwp/preview";
 
 export async function enablePreviewMode(req, res) {
   let { revisionId, postId, postType, pathname } = req.query;

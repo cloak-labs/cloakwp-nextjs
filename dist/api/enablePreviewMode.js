@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.enablePreviewMode = void 0;
-const cloakwp_1 = require("cloakwp");
-async function enablePreviewMode(req, res) {
+import { getPreviewParams } from "cloakwp/preview";
+export async function enablePreviewMode(req, res) {
     let { revisionId, postId, postType, pathname } = req.query;
-    const params = (0, cloakwp_1.getPreviewParams)(revisionId, postId, postType);
+    const params = getPreviewParams(revisionId, postId, postType);
     if ("error" in params)
         return res.status(401).json(params.error);
     // Enable Next.js Preview Mode by setting the cookies
@@ -16,4 +13,3 @@ async function enablePreviewMode(req, res) {
     res.writeHead(307, { Location: pathname });
     res.end();
 }
-exports.enablePreviewMode = enablePreviewMode;
