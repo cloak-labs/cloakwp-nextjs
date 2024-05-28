@@ -58,7 +58,7 @@
   },
   "peerDependencies": {
     "@cloakwp/react": ">= 0.2.0",
-    "cloakwp": ">= 0.6.1",
+    "cloakwp": ">= 0.6.x",
     "html-react-parser": "5.x",
     "next": ">= 12.3"
   },
