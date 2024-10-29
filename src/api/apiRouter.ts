@@ -5,10 +5,20 @@ import { enablePreviewMode } from "./enablePreviewMode";
 import { exitPreviewMode } from "./exitPreviewMode";
 import { verifyUserAuthStatus } from "./verifyUserAuthStatus";
 
-export function withSecretValidation(req, res, callback) {
+export function withSecretValidation(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  callback: (req: NextApiRequest, res: NextApiResponse) => any
+) {
   const { secret } = req.query;
-  const { error } = validateRouteSecretToken(secret);
-  return error ? res.status(401).json(error) : callback(req, res);
+  const { error } = validateRouteSecretToken(secret as string);
+
+  if (error) {
+    console.error("Secret Validation Error:", error);
+    return res.status(401).json(error);
+  }
+
+  return callback(req, res);
 }
 
 export function apiRouter(
@@ -16,6 +26,7 @@ export function apiRouter(
   res: NextApiResponse
 ): Promise<void> {
   const slug = req.query.route;
+  console.log("API Request:", slug);
 
   switch (slug[0]) {
     case "is-authenticated":

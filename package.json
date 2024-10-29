@@ -23,11 +23,11 @@
     }
   },
   "scripts": {
-    "dev": "tsc -p tsconfig.json -w",
+    "dev": "tsc -p tsconfig.json -w --preserveWatchOutput",
     "build": "npm run build-ts",
     "build-ts": "tsc -p tsconfig.json",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "zzz-postpublish": "git push && git push --tags"
+    "clean": "rm -rf .turbo && rm -rf dist && npm run clean:modules",
+    "clean:modules": "rm -rf node_modules"
   },
   "repository": {
     "type": "git",
@@ -51,8 +51,8 @@
   "homepage": "https://github.com/cloak-labs/cloakwp-nextjs#readme",
   "devDependencies": {
     "@types/node": "^18.18.1",
-    "@types/react": "18.2.37",
-    "@types/react-dom": "^18.2.8",
+    "@types/react": "18.3.7",
+    "@types/react-dom": "^18.3.0",
     "tsc-watch": "^5.0.3",
     "typescript": "^5.3.2"
   },

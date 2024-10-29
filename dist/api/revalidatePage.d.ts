@@ -1,1 +1,2 @@
-export declare function revalidatePage(req: any, res: any): Promise<any>;
+import { NextApiRequest, NextApiResponse } from "next";
+export declare function revalidatePage(req: NextApiRequest, res: NextApiResponse): Promise<void>;
