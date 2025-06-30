@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { validateRouteSecretToken } from "cloakwp/auth";
 import { revalidatePage } from "./revalidatePage";
 import { enablePreviewMode } from "./enablePreviewMode";
 import { exitPreviewMode } from "./exitPreviewMode";
 import { verifyUserAuthStatus } from "./verifyUserAuthStatus";
+import { type NextApiRequest, type NextApiResponse } from "next";
 
 export function withSecretValidation(
   req: NextApiRequest,

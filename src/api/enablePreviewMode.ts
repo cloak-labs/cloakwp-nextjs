@@ -1,5 +1,5 @@
 import { getPreviewParams } from "cloakwp/preview";
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from "next";
 
 export async function enablePreviewMode(
   req: NextApiRequest,

@@ -16,10 +16,15 @@
       "import": "./dist/api/index.js",
       "types": "./dist/api/*.d.ts"
     },
-    "./hooks": {
-      "require": "./dist/hooks/index.js",
-      "import": "./dist/hooks/index.js",
+    "./hooks/*": {
+      "require": "./dist/hooks/*.js",
+      "import": "./dist/hooks/*.js",
       "types": "./dist/hooks/*.d.ts"
+    },
+    "./components/*": {
+      "require": "./dist/components/*.js",
+      "import": "./dist/components/*.js",
+      "types": "./dist/components/*.d.ts"
     }
   },
   "scripts": {
@@ -59,7 +64,6 @@
   "peerDependencies": {
     "@cloakwp/react": ">= 0.2.0",
     "cloakwp": ">= 0.6.x",
-    "html-react-parser": "5.x",
     "next": ">= 12.3"
   },
   "publishConfig": {
