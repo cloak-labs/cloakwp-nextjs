@@ -1,2 +1,2 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from "next";
 export declare function enablePreviewMode(req: NextApiRequest, res: NextApiResponse): Promise<void>;
