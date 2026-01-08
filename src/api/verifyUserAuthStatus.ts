@@ -1,7 +1,7 @@
-import { getCMSInstanceAsync } from "cloakwp/cms";
+import { ContentSourceRegistry } from "cloakwp/cms";
 
 export async function verifyUserAuthStatus(req, res) {
-  const wp = await getCMSInstanceAsync();
+  const wp = ContentSourceRegistry.get("wp");
   const wpClient = wp.client();
   const wpCookie = req.headers.cookie || ""; // Get the WordPress cookies from the client-side request
 
