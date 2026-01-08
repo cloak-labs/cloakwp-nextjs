@@ -20,11 +20,6 @@
       "require": "./dist/hooks/*.js",
       "import": "./dist/hooks/*.js",
       "types": "./dist/hooks/*.d.ts"
-    },
-    "./components/*": {
-      "require": "./dist/components/*.js",
-      "import": "./dist/components/*.js",
-      "types": "./dist/components/*.d.ts"
     }
   },
   "scripts": {
