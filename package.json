@@ -59,7 +59,7 @@
   "peerDependencies": {
     "@cloakwp/react": ">= 0.2.0",
     "cloakwp": ">= 0.6.x",
-    "next": ">= 12.3"
+    "next": ">= 15.0"
   },
   "publishConfig": {
     "access": "public"

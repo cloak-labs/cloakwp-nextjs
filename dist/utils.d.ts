@@ -11,3 +11,4 @@ export declare function isRedirect(result: any): result is {
 export declare function isNotFound(result: any): result is {
     notFound: true;
 };
+//# sourceMappingURL=utils.d.ts.map
