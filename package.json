@@ -1,7 +1,7 @@
 {
   "name": "@cloakwp/nextjs",
   "version": "0.2.1",
-  "description": "CloakWP utilities + components for Next.js",
+  "description": "Thin Next.js adapters for CloakWP.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,17 @@
     "./api": {
       "require": "./dist/api/index.js",
       "import": "./dist/api/index.js",
-      "types": "./dist/api/*.d.ts"
+      "types": "./dist/api/index.d.ts"
+    },
+    "./app": {
+      "require": "./dist/app/index.js",
+      "import": "./dist/app/index.js",
+      "types": "./dist/app/index.d.ts"
+    },
+    "./login": {
+      "require": "./dist/login/index.js",
+      "import": "./dist/login/index.js",
+      "types": "./dist/login/index.d.ts"
     },
     "./hooks/*": {
       "require": "./dist/hooks/*.js",
@@ -26,6 +36,7 @@
     "dev": "tsc -p tsconfig.json -w --preserveWatchOutput",
     "build": "npm run build-ts",
     "build-ts": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.mjs",
     "clean": "rm -rf .turbo && rm -rf dist && npm run clean:modules",
     "clean:modules": "rm -rf node_modules"
   },

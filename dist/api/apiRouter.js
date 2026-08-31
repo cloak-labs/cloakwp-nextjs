@@ -1,31 +1,99 @@
-import { validateRouteSecretToken } from "cloakwp/auth";
-import { revalidatePage } from "./revalidatePage";
-import { enablePreviewMode } from "./enablePreviewMode";
-import { exitPreviewMode } from "./exitPreviewMode";
-import { verifyUserAuthStatus } from "./verifyUserAuthStatus";
-export function withSecretValidation(req, res, callback) {
-    const { secret } = req.query;
-    const { error } = validateRouteSecretToken(secret);
-    if (error) {
-        console.error("Secret Validation Error:", error);
-        return res.status(401).json(error);
+import { handleCloakWpRequest } from "cloakwp/rest";
+import { warmPaths } from "../warmCache.js";
+import { resolveCloakWpSession } from "../resolveSession.js";
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+async function readRawBody(req) {
+    if (req.method === "GET" || req.method === "HEAD") {
+        return undefined;
     }
-    return callback(req, res);
+    const chunks = [];
+    for await (const chunk of req) {
+        chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+    return Buffer.concat(chunks).toString("utf8");
 }
-export function apiRouter(req, res) {
-    const slug = req.query.route;
-    console.log("API Request:", slug);
-    switch (slug[0]) {
-        case "is-authenticated":
-            return verifyUserAuthStatus(req, res);
-        case "revalidate":
-            return withSecretValidation(req, res, revalidatePage);
-        case "preview":
-            return withSecretValidation(req, res, enablePreviewMode);
-        case "exit-preview":
-            return exitPreviewMode(req, res);
-        default:
-            res.statusCode = 404;
-            res.end();
+function requestOrigin(req) {
+    const forwardedProtocol = req.headers["x-forwarded-proto"];
+    const protocol = Array.isArray(forwardedProtocol)
+        ? forwardedProtocol[0]
+        : forwardedProtocol ?? "http";
+    const host = req.headers.host ?? "localhost";
+    return { origin: `${protocol}://${host}`, protocol };
+}
+function toWebRequest(req, body) {
+    const headers = new Headers();
+    for (const [name, value] of Object.entries(req.headers)) {
+        if (Array.isArray(value)) {
+            headers.set(name, value.join(", "));
+        }
+        else if (value !== undefined) {
+            headers.set(name, value);
+        }
     }
+    const { origin } = requestOrigin(req);
+    return new Request(`${origin}${req.url ?? "/"}`, {
+        method: req.method,
+        headers,
+        body,
+    });
+}
+async function sendWebResponse(response, res) {
+    response.headers.forEach((value, name) => {
+        const lower = name.toLowerCase();
+        if (lower === "set-cookie") {
+            const current = res.getHeader("Set-Cookie");
+            if (!current) {
+                res.setHeader("Set-Cookie", value);
+            }
+            else if (Array.isArray(current)) {
+                res.setHeader("Set-Cookie", [...current, value]);
+            }
+            else {
+                res.setHeader("Set-Cookie", [String(current), value]);
+            }
+            return;
+        }
+        res.setHeader(name, value);
+    });
+    const body = await response.text();
+    const contentType = response.headers.get("content-type") ?? "";
+    if (contentType.includes("application/json") && body !== "") {
+        res.status(response.status).json(JSON.parse(body));
+        return;
+    }
+    res.status(response.status).send(body);
+}
+/**
+ * Pages Router catch-all for `/pages/api/cloakwp/[[...route]].ts`.
+ *
+ * Preview cookies are pathname-scoped (`setPreviewData` / `clearPreviewData`
+ * `path` option). Session cookies are set by the protocol handler. Revalidation
+ * warms paths in the background after `res.revalidate`.
+ */
+export async function apiRouter(req, res) {
+    const route = Array.isArray(req.query.route)
+        ? req.query.route
+        : [req.query.route].filter((segment) => !!segment);
+    const { origin } = requestOrigin(req);
+    const request = toWebRequest(req, await readRawBody(req));
+    const response = await handleCloakWpRequest(request, {
+        route,
+        secret: process.env.CLOAKWP_AUTH_SECRET,
+        revalidatePath: (path) => res.revalidate(path),
+        scheduleCacheWarming: (paths) => {
+            void warmPaths(origin, paths);
+        },
+        enablePreviewMode: ({ data, pathname, maxAge }) => {
+            res.setPreviewData(data, { maxAge, path: pathname });
+        },
+        exitPreviewMode: (pathname) => {
+            res.clearPreviewData({ path: pathname });
+        },
+        session: resolveCloakWpSession(),
+    });
+    await sendWebResponse(response, res);
 }

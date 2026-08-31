@@ -1,12 +1,28 @@
+const loginRewrite = {
+    source: "/__cloakwp/login",
+    destination: "/cloakwp/login",
+};
 /**
- * A function to merge CloakWP-related Next.js config with a user defined Next.js config
+ * Merge CloakWP Next.js config. Rewrites `/__cloakwp/login` to the
+ * implementable `/cloakwp/login` route (App Router treats `_`-prefixed
+ * folders as private).
  */
-export function withCloakWP(userNextConfig) {
-    /*
-      Currently, we simply return the userNextConfig without modifying it.
-      Why? Better to have this function in user's apps so that they don't
-      need to add it after upgrading to a future version that does modify
-      things here. Future-proofing.
-     */
-    return userNextConfig;
+export function withCloakWP(userNextConfig = {}) {
+    const userRewrites = userNextConfig.rewrites;
+    return {
+        ...userNextConfig,
+        async rewrites() {
+            const resolved = typeof userRewrites === "function" ? await userRewrites() : userRewrites;
+            if (!resolved) {
+                return [loginRewrite];
+            }
+            if (Array.isArray(resolved)) {
+                return [loginRewrite, ...resolved];
+            }
+            return {
+                ...resolved,
+                beforeFiles: [loginRewrite, ...(resolved.beforeFiles ?? [])],
+            };
+        },
+    };
 }
