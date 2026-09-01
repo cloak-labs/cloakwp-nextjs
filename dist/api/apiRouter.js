@@ -1,6 +1,6 @@
 import { handleCloakWpRequest } from "cloakwp/rest";
 import { warmPaths } from "../warmCache.js";
-import { resolveCloakWpSession } from "../resolveSession.js";
+import { resolveCloakWpSession, readProcessEnv } from "../resolveSession.js";
 export const config = {
     api: {
         bodyParser: false,
@@ -82,7 +82,7 @@ export async function apiRouter(req, res) {
     const request = toWebRequest(req, await readRawBody(req));
     const response = await handleCloakWpRequest(request, {
         route,
-        secret: process.env.CLOAKWP_AUTH_SECRET,
+        secret: readProcessEnv("CLOAKWP_AUTH_SECRET"),
         revalidatePath: (path) => res.revalidate(path),
         scheduleCacheWarming: (paths) => {
             void warmPaths(origin, paths);

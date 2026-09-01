@@ -47,13 +47,18 @@ export const { GET, POST, PUT, PATCH, DELETE } = createCloakWpRouteHandler();
 Import App Router adapters from `@cloakwp/nextjs/app` so Pages-only apps do
 not load `next/headers` / `next/cache`.
 
-## Login
+## Login and logout
 
-Default login URL is `/__cloakwp/login` (`withCloakWP()` rewrites that to
-`/cloakwp/login`, because App Router treats `_`-prefixed folders as private).
+Default URLs are `/__cloakwp/login` and `/__cloakwp/logout`. `withCloakWP()`
+rewrites those to `/cloakwp/login` and `/cloakwp/logout`, because App Router
+treats `_`-prefixed folders as private.
+
+WordPress `wp-login.php?action=logout` redirects to `/api/cloakwp/auth/logout`
+(GET) so frontend session cookies clear without client JS. AdminBar Log Out
+POSTs to the same BFF and then WordPress `establish-logout`.
 
 ```ts
-import { CloakWpLoginPage } from "@cloakwp/nextjs/login";
+import { CloakWpLoginPage, CloakWpLogoutPage } from "@cloakwp/nextjs/login";
 ```
 
 Machine REST should use Application Passwords (`WP_APPLICATION_USER` +

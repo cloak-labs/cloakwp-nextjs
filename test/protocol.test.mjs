@@ -69,11 +69,26 @@ test("resolveWarmUrl keeps root as /", async () => {
   );
 });
 
-test("withCloakWP rewrites /__cloakwp/login onto /cloakwp/login", async () => {
+test("withCloakWP rewrites /__cloakwp/{login,logout} onto /cloakwp/*", async () => {
   const { withCloakWP } = await import("../dist/withCloakWP.js");
   const rewrites = await withCloakWP().rewrites();
-  assert.deepEqual(rewrites[0], {
-    source: "/__cloakwp/login",
-    destination: "/cloakwp/login",
-  });
+  assert.deepEqual(rewrites.slice(0, 2), [
+    {
+      source: "/__cloakwp/login",
+      destination: "/cloakwp/login",
+    },
+    {
+      source: "/__cloakwp/logout",
+      destination: "/cloakwp/logout",
+    },
+  ]);
+});
+
+test("readProcessEnv looks up env at runtime", async () => {
+  const { readProcessEnv } = await import("../dist/resolveSession.js");
+  const key = "CLOAKWP_TEST_RUNTIME_ENV";
+  process.env[key] = "from-runtime";
+  assert.equal(readProcessEnv(key), "from-runtime");
+  delete process.env[key];
+  assert.equal(readProcessEnv(key), "");
 });

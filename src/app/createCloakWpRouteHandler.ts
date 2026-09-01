@@ -1,6 +1,13 @@
-import { handleCloakWpRequest } from "cloakwp/rest";
+import {
+  handleCloakWpRequest,
+  type CloakWpSessionOptions,
+} from "cloakwp/rest";
 import { warmPaths } from "../warmCache.js";
-import { resolveCloakWpSession } from "../resolveSession.js";
+import { resolveCloakWpSession, readProcessEnv } from "../resolveSession.js";
+
+export type CreateCloakWpRouteHandlerOptions = {
+  session?: CloakWpSessionOptions | (() => CloakWpSessionOptions);
+};
 
 /**
  * App Router handlers for `/api/cloakwp/[[...route]]`.
@@ -16,17 +23,26 @@ import { resolveCloakWpSession } from "../resolveSession.js";
  * export const { GET, POST, PUT, PATCH, DELETE } = createCloakWpRouteHandler();
  * ```
  */
-export function createCloakWpRouteHandler() {
+export function createCloakWpRouteHandler(
+  options: CreateCloakWpRouteHandlerOptions = {},
+) {
   return {
-    GET: createCloakWpHandler(),
-    POST: createCloakWpHandler(),
-    PUT: createCloakWpHandler(),
-    PATCH: createCloakWpHandler(),
-    DELETE: createCloakWpHandler(),
+    GET: createCloakWpHandler(options),
+    POST: createCloakWpHandler(options),
+    PUT: createCloakWpHandler(options),
+    PATCH: createCloakWpHandler(options),
+    DELETE: createCloakWpHandler(options),
   };
 }
 
-function createCloakWpHandler() {
+function resolveSession(options: CreateCloakWpRouteHandlerOptions): CloakWpSessionOptions {
+  if (typeof options.session === "function") {
+    return options.session();
+  }
+  return options.session ?? resolveCloakWpSession();
+}
+
+function createCloakWpHandler(options: CreateCloakWpRouteHandlerOptions) {
   return async function handler(req: Request) {
     const { revalidatePath } = await import("next/cache");
     const { after } = await import("next/server");
@@ -39,7 +55,7 @@ function createCloakWpHandler() {
 
     return handleCloakWpRequest(req, {
       route,
-      secret: process.env.CLOAKWP_AUTH_SECRET,
+      secret: readProcessEnv("CLOAKWP_AUTH_SECRET"),
       revalidatePath(path) {
         revalidatePath(path);
       },
@@ -74,7 +90,7 @@ function createCloakWpHandler() {
           maxAge: 0,
         });
       },
-      session: resolveCloakWpSession(),
+      session: resolveSession(options),
     });
   };
 }

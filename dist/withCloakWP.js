@@ -1,11 +1,18 @@
-const loginRewrite = {
-    source: "/__cloakwp/login",
-    destination: "/cloakwp/login",
-};
+const cloakWpRewrites = [
+    {
+        source: "/__cloakwp/login",
+        destination: "/cloakwp/login",
+    },
+    {
+        source: "/__cloakwp/logout",
+        destination: "/cloakwp/logout",
+    },
+];
 /**
- * Merge CloakWP Next.js config. Rewrites `/__cloakwp/login` to the
- * implementable `/cloakwp/login` route (App Router treats `_`-prefixed
- * folders as private).
+ * Merge CloakWP Next.js config. Rewrites `/__cloakwp/{login,logout}` to the
+ * implementable `/cloakwp/*` routes (App Router treats `_`-prefixed
+ * folders as private). WordPress wp-admin logout hits
+ * `/api/cloakwp/auth/logout` directly so cookies clear on GET.
  */
 export function withCloakWP(userNextConfig = {}) {
     const userRewrites = userNextConfig.rewrites;
@@ -14,14 +21,14 @@ export function withCloakWP(userNextConfig = {}) {
         async rewrites() {
             const resolved = typeof userRewrites === "function" ? await userRewrites() : userRewrites;
             if (!resolved) {
-                return [loginRewrite];
+                return [...cloakWpRewrites];
             }
             if (Array.isArray(resolved)) {
-                return [loginRewrite, ...resolved];
+                return [...cloakWpRewrites, ...resolved];
             }
             return {
                 ...resolved,
-                beforeFiles: [loginRewrite, ...(resolved.beforeFiles ?? [])],
+                beforeFiles: [...cloakWpRewrites, ...(resolved.beforeFiles ?? [])],
             };
         },
     };

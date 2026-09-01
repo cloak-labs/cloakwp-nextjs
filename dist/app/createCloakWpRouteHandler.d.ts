@@ -1,3 +1,7 @@
+import { type CloakWpSessionOptions } from "cloakwp/rest";
+export type CreateCloakWpRouteHandlerOptions = {
+    session?: CloakWpSessionOptions | (() => CloakWpSessionOptions);
+};
 /**
  * App Router handlers for `/api/cloakwp/[[...route]]`.
  *
@@ -12,7 +16,7 @@
  * export const { GET, POST, PUT, PATCH, DELETE } = createCloakWpRouteHandler();
  * ```
  */
-export declare function createCloakWpRouteHandler(): {
+export declare function createCloakWpRouteHandler(options?: CreateCloakWpRouteHandlerOptions): {
     GET: (req: Request) => Promise<Response>;
     POST: (req: Request) => Promise<Response>;
     PUT: (req: Request) => Promise<Response>;
