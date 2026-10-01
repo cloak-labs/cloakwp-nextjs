@@ -1,7 +1,4 @@
-import {
-  handleCloakWpRequest,
-  type CloakWpSessionOptions,
-} from "cloakwp/rest";
+import { handleCloakWpRequest, type CloakWpSessionOptions } from "cloakwp/rest";
 import { warmPaths } from "../warmCache.js";
 import { resolveCloakWpSession, readProcessEnv } from "../resolveSession.js";
 
@@ -35,7 +32,9 @@ export function createCloakWpRouteHandler(
   };
 }
 
-function resolveSession(options: CreateCloakWpRouteHandlerOptions): CloakWpSessionOptions {
+function resolveSession(
+  options: CreateCloakWpRouteHandlerOptions,
+): CloakWpSessionOptions {
   if (typeof options.session === "function") {
     return options.session();
   }

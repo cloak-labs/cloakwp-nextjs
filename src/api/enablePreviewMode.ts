@@ -3,13 +3,13 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 
 export async function enablePreviewMode(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   let { revisionId, postId, postType, pathname } = req.query;
   const params = getPreviewParams(
     revisionId as string,
     postId as string,
-    postType as string
+    postType as string,
   );
 
   if ("error" in params) {

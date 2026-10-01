@@ -22,11 +22,14 @@ async function readRawBody(req: NextApiRequest): Promise<string | undefined> {
   return Buffer.concat(chunks).toString("utf8");
 }
 
-function requestOrigin(req: NextApiRequest): { origin: string; protocol: string } {
+function requestOrigin(req: NextApiRequest): {
+  origin: string;
+  protocol: string;
+} {
   const forwardedProtocol = req.headers["x-forwarded-proto"];
   const protocol = Array.isArray(forwardedProtocol)
     ? forwardedProtocol[0]
-    : forwardedProtocol ?? "http";
+    : (forwardedProtocol ?? "http");
   const host = req.headers.host ?? "localhost";
   return { origin: `${protocol}://${host}`, protocol };
 }
