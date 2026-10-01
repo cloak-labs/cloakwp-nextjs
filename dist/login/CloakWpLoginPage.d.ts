@@ -1,4 +1,3 @@
-/// <reference types="react" />
 export type CloakWpLoginPageProps = {
     redirect?: string;
     error?: string;

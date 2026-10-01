@@ -19,7 +19,9 @@ export function withCloakWP(userNextConfig = {}) {
     return {
         ...userNextConfig,
         async rewrites() {
-            const resolved = typeof userRewrites === "function" ? await userRewrites() : userRewrites;
+            const resolved = typeof userRewrites === "function"
+                ? await userRewrites()
+                : userRewrites;
             if (!resolved) {
                 return [...cloakWpRewrites];
             }

@@ -20,7 +20,7 @@ function requestOrigin(req) {
     const forwardedProtocol = req.headers["x-forwarded-proto"];
     const protocol = Array.isArray(forwardedProtocol)
         ? forwardedProtocol[0]
-        : forwardedProtocol ?? "http";
+        : (forwardedProtocol ?? "http");
     const host = req.headers.host ?? "localhost";
     return { origin: `${protocol}://${host}`, protocol };
 }

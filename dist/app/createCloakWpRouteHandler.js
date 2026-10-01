@@ -1,4 +1,4 @@
-import { handleCloakWpRequest, } from "cloakwp/rest";
+import { handleCloakWpRequest } from "cloakwp/rest";
 import { warmPaths } from "../warmCache.js";
 import { resolveCloakWpSession, readProcessEnv } from "../resolveSession.js";
 /**
