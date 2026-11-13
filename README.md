@@ -49,9 +49,15 @@ not load `next/headers` / `next/cache`.
 
 ## Login and logout
 
-Default URLs are `/__cloakwp/login` and `/__cloakwp/logout`. `withCloakWP()`
-rewrites those to `/cloakwp/login` and `/cloakwp/logout`, because App Router
-treats `_`-prefixed folders as private.
+The public login URL is `/_admin`. `withCloakWP()` rewrites it to
+`/cloakwp/login`, because App Router treats `_`-prefixed folders as private.
+`/__cloakwp/login` redirects to `/_admin`. Logout stays at `/__cloakwp/logout`,
+rewritten to `/cloakwp/logout`.
+
+Each frontend still mounts a thin `app/cloakwp/login/page.tsx` (or
+`pages/cloakwp/login.tsx`) that renders `CloakWpLoginPage`. The URL, the
+rewrite, and the page UI all live in this package; Next.js only needs that
+route file so the rewrite has a page to serve.
 
 WordPress `wp-login.php?action=logout` redirects to `/api/cloakwp/auth/logout`
 (GET) so frontend session cookies clear without client JS. AdminBar Log Out

@@ -69,12 +69,14 @@ test("resolveWarmUrl keeps root as /", async () => {
   );
 });
 
-test("withCloakWP rewrites /__cloakwp/{login,logout} onto /cloakwp/*", async () => {
+test("withCloakWP serves /_admin and keeps the old login path", async () => {
   const { withCloakWP } = await import("../dist/withCloakWP.js");
-  const rewrites = await withCloakWP().rewrites();
+  const config = withCloakWP();
+  const rewrites = await config.rewrites();
+  const redirects = await config.redirects();
   assert.deepEqual(rewrites.slice(0, 2), [
     {
-      source: "/__cloakwp/login",
+      source: "/_admin",
       destination: "/cloakwp/login",
     },
     {
@@ -82,6 +84,11 @@ test("withCloakWP rewrites /__cloakwp/{login,logout} onto /cloakwp/*", async () 
       destination: "/cloakwp/logout",
     },
   ]);
+  assert.deepEqual(redirects[0], {
+    source: "/__cloakwp/login",
+    destination: "/_admin",
+    permanent: false,
+  });
 });
 
 test("readProcessEnv looks up env at runtime", async () => {
