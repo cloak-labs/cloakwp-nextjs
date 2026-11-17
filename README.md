@@ -39,10 +39,32 @@ import { createCloakWpRouteHandler } from "@cloakwp/nextjs/app";
 export const { GET, POST, PUT, PATCH, DELETE } = createCloakWpRouteHandler();
 ```
 
-- Preview: Draft Mode plus a pathname-scoped `__cloakwp_preview_data` cookie
-  (httpOnly). `sameSite: none` on HTTPS so the WP editor iframe can read it.
+- Preview: Draft Mode plus a signed, pathname-scoped HttpOnly cookie.
+  Use `getCloakWpPreview()` in server-side page loaders and metadata.
 - Revalidation: `revalidatePath`, then `after()` cache warming.
 - Session: same cookie + handshake protocol as Pages Router.
+
+In an App Router page loader, read the preview before looking for a published
+document by slug. The signed preview identifies the WordPress document by ID,
+so it also works for drafts that have no published URL yet:
+
+```ts
+import { getCloakWpPreview } from "@cloakwp/nextjs/app";
+import { getPreviewData } from "cloakwp/preview";
+
+async function loadDocument(pathname: string) {
+  const preview = await getCloakWpPreview();
+  if (preview?.pathname === pathname) {
+    return getPreviewData(preview.data, await createWordPressServerClient());
+  }
+  return loadPublishedDocument(pathname);
+}
+```
+
+Use a server-side WordPress client with permission to read the applicable
+drafts and revisions. Use the same loader for metadata and page content.
+The route handler validates WordPress's preview token before setting cookies;
+the reader only trusts a signed session while Next.js Draft Mode is enabled.
 
 Import App Router adapters from `@cloakwp/nextjs/app` so Pages-only apps do
 not load `next/headers` / `next/cache`.

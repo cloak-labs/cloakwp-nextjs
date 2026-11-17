@@ -5,8 +5,7 @@ export type CreateCloakWpRouteHandlerOptions = {
 /**
  * App Router handlers for `/api/cloakwp/[[...route]]`.
  *
- * Preview uses Draft Mode plus a pathname-scoped `__cloakwp_preview_data`
- * cookie. Revalidation calls `revalidatePath` and warms those paths after
+ * Preview uses Draft Mode plus a signed, pathname-scoped session cookie. Revalidation calls `revalidatePath` and warms those paths after
  * the response. Session cookies and wp-admin handshakes are handled by
  * `auth/*` on the same catch-all.
  *
